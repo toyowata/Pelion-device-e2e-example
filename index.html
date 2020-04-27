@@ -14,7 +14,7 @@
                 <img id="logo" src="image/Logo_ArmPelion_White.bc9f68a5a605.svg"/>
             </div>
 
-            <div id="title">Pelion Device Management Service APIを使用してデバイスと接続する</div>
+            <div id="title">Pelion Device ManagementサービスAPIを使用してデバイスと接続する</div>
 
             <div id="lead">
                 <p>
@@ -24,265 +24,256 @@
                     Pelion Device ManagementサービスAPIを使用して、デプロイされたデバイスと通信する方法を理解することが出来ます。
                 </p>
                 <p>
-                    この使用例のソースコードは<a href="https://github.com/coisme/Pelion-device-e2e-example">こちら</a>です。
+                    この使用例のソースコードは<a href="https://github.com/toyowata/Pelion-device-e2e-example">こちら</a>です。
                 </p>
             </div>
 
 
 
-            <h1>Prerequisites</h1>
+            <h1>事前準備</h1>
             <p>
-                To go through this example, you need these.
+                このページを使用するには、以下の準備が必要です。
                 <ul>
-                    <li>Pelion Device Management API key (<a href="https://www.pelion.com/docs/device-management/current/user-account/api-keys.html#creating-a-key">Get API key</a>)</li>
-                    <li>Device running <a href="https://github.com/ARMmbed/mbed-cloud-client-example">mbed-cloud-client-example</a> or <a href="https://github.com/ARMmbed/mbed-os-example-pelion">mbed-os-example-pelion</a></li>
+                    <li>Pelion Device Management APIキー (<a href="https://www.pelion.com/docs/device-management/current/user-account/api-keys.html#creating-a-key">Get API key</a>)</li>
+                    <li><a href="https://github.com/ARMmbed/mbed-cloud-client-example">mbed-cloud-client-example</a> または <a href="https://github.com/ARMmbed/mbed-os-example-pelion">mbed-os-example-pelion</a>が書き込まれたデバイス</li>
                 </ul>
             </p>
 
 
 
-            <h1>API key</h1>
+            <h1>APIキー</h1>
             <p>
-                Please input your API key here (API key starts from ak_...). About API key and how to get it, please refer
-                <a href="https://www.pelion.com/docs/device-management/current/user-account/api-keys.html">online document</a>.
+                APIキーを入力します（APIキーは、ak_...から始まる文字列です）。 APIキーと取得方法については
+                <a href="https://www.pelion.com/docs/device-management/current/user-account/api-keys.html">オンラインドキュメント</a>を参照してください。
             </p>
             <div class="operation">
                 <input id="apikey" type="text" size="80" value="" placeholder="ak_..."/><br/>
                 <input id="storeApiKey" type="checkbox" name="storeApiKey" onclick="handleApiKeyCheckbox()"/>
-                <label for="storeApiKey">Store API Key in Cookie (Use only on your private browser)</label>
+                <label for="storeApiKey">APIキーをCookieに保存する（プライベートブラウザでのみ使用してください）</label>
             </div>
 
 
 
-            <h1>Open event notification channel and receive event from device</h1>
+            <h1>Event notificationチャネルを開き、デバイスからイベントを受信する</h1>
             <p>
-                To receive messages from your devices, you need to open an event notification channel. We use WebSocket notification channel in this example.
+                デバイスからのメッセージを受信するには、Event notificationチャネルを開く必要があります。この例では WebSocket notificationチャネルを使用しています。
             </p>
             <p>
-                To use the WebSocket channel, follow these steps. Detailed description on this flow is
-                <a href="https://www.pelion.com/docs/device-management/current/integrate-web-app/event-notification.html#websocket-interface">here</a>.
-                Note that you can open only 1 notification channel per API key.
+                以下の手順で、WebSocketを使用することが出来ます。この手順の詳細は、
+                <a href="https://www.pelion.com/docs/device-management/current/integrate-web-app/event-notification.html#websocket-interface">こちら</a>を参照してください。一つのAPIキーでオープンできるnotificationチャネルは、一つだけです。
             </p>
 
-            <h2>Create WebSocket notification channel</h2>
+            <h2>WebSocket notificationチャネルの作成</h2>
             <p>
-                First we will need to open a <a href="https://www.pelion.com/docs/device-management/current/integrate-web-app/event-notification.html">Event notification channel.</a>
-                Click this button to create a WebSocket notification channel with 
-                <a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html#registerWebsocket">PUT /v2/notification/websocket</a>.
+                まず最初に<a href="https://www.pelion.com/docs/device-management/current/integrate-web-app/event-notification.html">Event notificationチャネル</a>を開きます。
+                下のボタンをクリックし、 
+                <a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html#registerWebsocket">PUT /v2/notification/websocket</a> サービスAPIを使用してWebSocket notificationチャネルを作成します。
             </p>
             <div class="operation">
                 <script src="https://gist-it.appspot.com/github/coisme/Pelion-device-e2e-example/blob/v0.1.0/e2e.js?slice=0:18&footer=minimal"></script>
-                <button type="button" onclick="createWebSocketNotificationChannel()">Run this code</button>
+                <button type="button" onclick="createWebSocketNotificationChannel()">このコードを実行</button>
             </div>
             
-            <h2>Connect WebSocket notification channel</h2>
+            <h2>WebSocket notificationチャネルに接続</h2>
             <p>
-                After creating your WebSocket notification channel, connect to it with
-                <a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html#connectWebsocket">GET /v2/websocket-connect</a>.
+                WebSocket notificationチャネルを作成した後に、
+                <a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html#connectWebsocket">GET /v2/websocket-connect</a> サービスAPIを使用して接続します。
             </p>
             <div class="operation">
                 <script src="https://gist-it.appspot.com/github/coisme/Pelion-device-e2e-example/blob/v0.1.0/e2e.js?slice=19:90&footer=minimal"></script>
-                <button type="button" onclick="connectWebSocket()">Run this code</button>
+                <button type="button" onclick="connectWebSocket()">このコードを実行</button>
             </div>
             <p>
-                Now you have a event notification channel open. You will receive the device lifitime events (Register, Register-Update and Expire) by default.
+                これでイベント通知チャンネルが開きました。デフォルトでは、デバイスのライフタイムイベント（Register, Register-Update and Expire）を受け取ることができます。
             </p>
 
 
 
-            <h1>Connect your device</h1>
+            <h1>デバイスとの接続</h1>
             <p>
-                Turn on or reset your device and connect to Pelion.
-                You should see <b>reqistration</b> or <b>reg-update</b> event in the <b>Notification Channel</b> below.
+                電源を入れるかリセットを行ってデバイスをPelionに接続します。
+                <b>reqistration</b> または <b>reg-update</b>イベントが下記の<b>Notification Channel</b>に表示されているはずです。
             </p>
-            <h2>Choose your device</h2>
+            <h2>デバイスの選択</h2>
             <p>
-                First, click <b>Get Registered Devices</b> button below to get the devices which state is <b>registered</b>.
-                <a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-directory.html#deviceList">GET /v3/devices</a> is used to get device list.
+                まず、下の「このコードを実行」ボタンをクリックすると、<b>registered</b>状態のデバイスが表示されます。
+                <a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-directory.html#deviceList">GET /v3/devices</a> はデバイスリストの取得に使用されます。
             </p>
             <div class="operation">
                 <script src="https://gist-it.appspot.com/github/coisme/Pelion-device-e2e-example/blob/v0.1.0/e2e.js?slice=91:115&footer=minimal"></script>
-                <button type="button" onclick="getRegisteredDevices()">Run this code</button>
+                <button type="button" onclick="getRegisteredDevices()">このコードを実行</button>
             </div>
             <p>
-                When you click the button above, you'll see the registered device(s) in the box below. Choose your target device.
+                上のボタンをクリックすると、下のリストに登録されているデバイスが表示されます。対象のデバイスを選択してください。
             </p>
             <div class="operation">
                 <select id="deviceSelector">
-                    <option value="00000000000000000000000000000000">Click the above button to get registered devices</option>
+                    <option value="00000000000000000000000000000000">上のボタンを押して登録されたデバイスを取得してください</option>
                 </select>
             </div>
 
 
 
-            <h1>Write resource to device</h1>
+            <h1>デバイスのリソースに書き込む</h1>
             <p>
-                Send a resource update request to a device with 
-                <a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html#createAsyncRequest">POST /v2/device-requests</a>.
-                For detail flow, see <a href="https://www.pelion.com/docs/device-management/current/connecting/handle-resource-webapp.html#the-write-operation">the Write operation</a>.
+                <a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html#createAsyncRequest">POST /v2/device-requests</a> でデバイスにリソースアップデートリクエストを送ります。
+                詳細は説明は、<a href="https://www.pelion.com/docs/device-management/current/device-management/handle-resource-webapp.html#the-write-operation">こちら</a>を参照してください。
             </p>
             <p>
-                With Write request you can configure the device. The example application blinks a LED, let's configure new blink pattern by writing it in "pattern_resource" /3201/0/5853.
-                The default value of this resource is "500:500:500:500". We change this to "500:1000:500:1000". This value must be encoded into Base64, which is done in our script.
+                書き込みリクエストでデバイスの設定を行うことができます。このアプリケーションの例ではLEDを点滅できますが、"pattern_resource"/3201/0/5853に書き込み、新しい点滅パターンを設定してみましょう。
+                このリソースのデフォルト値は、"500:500:500:500"です。これを、"500:1000:500:1000"に変更してみます。この値はBase64にエンコードされる必要があるので、スクリプトで変換処理します。
             </p>
             <div class="operation">
                 <script src="https://gist-it.appspot.com/github/coisme/Pelion-device-e2e-example/blob/v0.1.0/e2e.js?slice=116:136&footer=minimal"></script>
-                Pattern: <input id="blinkPattern" type="text" size="30" value="500:1000:500:1000" /><br />
-                <button type="button" onclick="writeResource( getDeviceId(), '/3201/0/5853', document.getElementById('blinkPattern').value)">Run this code</button>
+                Pattern: <input id="blinkPattern" type="text" size="30" value="500:1000:500:1000" /><br /><br />
+                <button type="button" onclick="writeResource( getDeviceId(), '/3201/0/5853', document.getElementById('blinkPattern').value)">このコードを実行</button>
             </div>
             <p>
-                You'll get an async-response on your notification channel when the device accepted the request. In addition, the user LED on the device will blink with the specified pattern, 500 ms, 1000 ms, 500 ms, 1000 ms.
+                デバイスがリクエストを受け入れた場合、Notification Channelに非同期レスポンスが表示されます。また、デバイスのユーザーLEDが500ms、1000ms、500ms、1000msと指定したパターンで点滅します。
             </p>
             
 
 
-            <h1>Read resource from device</h1>
-            <p>
-                Send a resource read request to a device with 
-                <a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html#createAsyncRequest">POST /v2/device-requests</a>.
-                For detail flow, see <a href="https://www.pelion.com/docs/device-management/current/connecting/handle-resource-webapp.html#the-read-operation">the Read operation</a>.
+            <h1>デバイスからリソースを読み込む</h1>
+            <p> 
+                <a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html#createAsyncRequest">POST /v2/device-requests</a> でデバイスにリソース読み込みリクエストを送ることができます。
+                詳細は説明は、<a href="https://www.pelion.com/docs/device-management/current/device-management/handle-resource-webapp.html#the-read-operation">こちら</a>を参照してください。
             </p>
             <p>
-                For example, let's read resource Digital Input Counter /3200/0/5501.
+                ここでは、デジタル入力カウンタ /3200/0/5501 リソースを読み込んでみます。
             </p>
             <div class="operation">
                 <script src="https://gist-it.appspot.com/github/coisme/Pelion-device-e2e-example/blob/v0.1.0/e2e.js?slice=137:156&footer=minimal"></script>
-                <button type="button" onclick="readResource( getDeviceId(), '/3200/0/5501')">Run this code</button>
+                <button type="button" onclick="readResource( getDeviceId(), '/3200/0/5501')">このコードを実行</button>
             </div>
 
             <p>
-                <b>Note for cache</b><br/>
-                If max-age value is set by the device's client, reported values from the device is cached for max-age:
+                <b>キャッシュに関して</b><br/>
+                デバイスのクライアントでmax-age値が設定されている場合、デバイスから読み込まれた値はmax-age用にキャッシュされます:
                 <a href="https://www.pelion.com/docs/device-management/current/connecting/device-guidelines.html#resource-cache">https://www.pelion.com/docs/device-management/current/connecting/device-guidelines.html#resource-cache</a>
-                If the cached value is valid, it will be returned as the response. If your webapp needs to get the current value from the device, not cached value, max-age must be set 0 (default is 0) at the device client.
+                キャッシュされた値が有効な場合、それがレスポンスとして返されます。ウェブアプリがキャッシュされた値ではなく、デバイスから現在の値を取得する必要がある場合、デバイスクライアントで max-age を 0 (デフォルトは 0) に設定する必要があります。
             </p>
 
 
 
-            <h1>Subscribe resource</h1>
+            <h1>リソースのサブスクライブ</h1>
 
-            <h2>Subscribe</h2>
+            <h2>サブスクライブ</h2>
             <p>
-                Subscribe to a resource on a device with 
-                <a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html#addResourceSubscription">PUT /v2/subscription/{device-id}/{resourcePath}</a>.
+                <a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html#addResourceSubscription">PUT /v2/subscription/{device-id}/{resourcePath}</a> でデバイスのリソースをサブスクライブします。
             </p>
             <p>
-                For example, let's subscribe Digital Input Counter /3200/0/5501 resource.
+                ここでは、デジタル入力カウンタ /3200/0/5501 リソースをサブスクライブします。
             </p>
             <div class="operation">
                 <script src="https://gist-it.appspot.com/github/coisme/Pelion-device-e2e-example/blob/v0.1.0/e2e.js?slice=157:173&footer=minimal"></script>
-                <button type="button" onclick="subscribeResource( getDeviceId(), '/3200/0/5501')">Run this code</button>
+                <button type="button" onclick="subscribeResource( getDeviceId(), '/3200/0/5501')">このコードを実行</button>
             </div>
             <p>
-                You will receive an async response and followed by notifications for resource change. 
+                非同期レスポンスを受信し、その後にリソース変更の通知が表示されます。
             </p>
 
-            <h2>Unsubscribe</h2>
+            <h2>サブスクライブの停止</h2>
             <p>
-                To stop subscribing to the resource, use 
-                <a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html#deleteResourceSubscription">DELETE /v2/subscriptions/{device-id}/{resourcePath}</a>.
+                リソースのサブスクライブを停止する場合、 
+                <a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html#deleteResourceSubscription">DELETE /v2/subscriptions/{device-id}/{resourcePath}</a> を使用します。
             </p>
             <div class="operation">
                 <script src="https://gist-it.appspot.com/github/coisme/Pelion-device-e2e-example/blob/v0.1.0/e2e.js?slice=174:190&footer=minimal"></script>
-                <button type="button" onclick="unsubscribeResource( getDeviceId(), '/3200/0/5501')">Run this code</button>
+                <button type="button" onclick="unsubscribeResource( getDeviceId(), '/3200/0/5501')">このコードを実行</button>
             </div>
 
 
 
-            <h1>Presubscribe resource</h1>
+            <h1>リソースのプリサブスクライブ</h1>
             <p>
-                Presubscribe to a resource with <a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html#updatePreSubscriptions">PUT /v2/subscriptions</a>.
+                リソースをプリサブスクライブするには、<a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html#updatePreSubscriptions">PUT /v2/subscriptions</a> を使用します。
             </p>
             <p>
-                A presubscription automatically subscribes to Resources based on given rules. 
-                When a device with Resources match the set rules, the Device management Connect service sends a subscription (observe) request to the device on behalf of your application.
-                See 
-                <a href="https://www.pelion.com/docs/device-management/current/connecting/resource-change-webapp.html#presubscriptions">this online document</a>
-                for details of presubscription.
+                プリサブスクリプションは、与えられたルールに基づいてリソースを自動的にサブスクライブします。
+                リソースを持つデバイスが設定されたルールに一致すると、デバイス管理コネクトサービスは、アプリケーションに代わってデバイスにサブスクリプション（監視）要求を送信します。
+                プリサブスクリプションの詳細は、<a href="https://www.pelion.com/docs/device-management/current/device-management/resource-change-webapp.html#presubscriptions">このドキュメント</a>を参照してください。
             </p>
 
-            <h2>Subscribe</h2>
+            <h2>サブスクライブ</h2>
             <p>
-                Let's presubscribe to Digital Input Counter /3200/0/5501. 
-                To presubscribe, use <a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html#updatePreSubscriptions">PUT /v2/subscriptions</a>.
-                This case, any device which has Digital Input Counter /3200/0/5501 resource will be subscribed automatically
-                when device registers or does register update.
+                デジタル入力カウンタ /3200/0/5501 リソースをプリサブスクライブします。プリサブスクライブするには、<a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html#updatePreSubscriptions">PUT /v2/subscriptions</a> を使用します。
+                この場合、デジタル入力カウンタ/3200/0/5501リソースを持つデバイスは、デバイスが登録または更新登録を行うと自動的にサブスクライブされます。
             </p>
             <div class="operation">
                 <script src="https://gist-it.appspot.com/github/coisme/Pelion-device-e2e-example/blob/v0.1.0/e2e.js?slice=191:211&footer=minimal"></script>
-                <button type="button" onclick="presubscribe( getDeviceId(),'/3200/0/5501')">Run this code</button>
+                <button type="button" onclick="presubscribe( getDeviceId(),'/3200/0/5501')">このコードを実行</button>
             </div>
             <p>
-                Try to reboot your device. The resource /3200/0/5501 will be subscribed automatically and you'll see notification on your notification channel.
+                リセットボタンを押してデバイスを再起動してみてください。リソース/3200/0/5501は自動的にサブスクライブされ、Notificationチャンネルに通知が表示されます。
             </p>
 
-            <h2>Unsubscribe</h2>
+            <h2>サブスクライブの停止</h2>
             <p>
-                To unsubscribe presubscription, use <a href="">DELETE /v2/subscriptions</a>.
+                プリサブスクリプションを解除するには、<a href="">DELETE /v2/subscriptions</a> を使用します。
             </p>
             <div class="operation">
                 <script src="https://gist-it.appspot.com/github/coisme/Pelion-device-e2e-example/blob/v0.1.0/e2e.js?slice=211:228&footer=minimal"></script>
-                <button type="button" onclick="unpresubscribe()">Run this code</button>
+                <button type="button" onclick="unpresubscribe()">このコードを実行</button>
             </div>
 
 
 
-            <h1>Set notification rules for a resource</h1>
+            <h1>リソースの通知ルールを設定する</h1>
             <p>
-                The web application can set a rule-based subscription to an Object, an Object Instance or a Resource.
+                ウェブアプリケーションは、オブジェクト、オブジェクトインスタンス、またはリソースにルールベースのサブスクリプションを設定することができます。
             </p>
 
-            <h2>Subscribe</h2>
+            <h2>サブスクライブ</h2>
             <p>
-                Note that you need to subscribe /3200/0/5501 besides setting a notification rule.
+                通知ルールの設定以外に、/3200/0/5501のサブスクライブが必要なので注意してください。
             </p>
             <div class="operation">
                 <script src="https://gist-it.appspot.com/github/coisme/Pelion-device-e2e-example/blob/v0.1.0/e2e.js?slice=157:173&footer=minimal"></script>
-                <button type="button" onclick="subscribeResource( getDeviceId(), '/3200/0/5501')">Run this code</button>
+                <button type="button" onclick="subscribeResource( getDeviceId(), '/3200/0/5501')">このコードを実行</button>
             </div>
 
-            <h2>Set notification rule</h2>
+            <h2>通知ルールの設定</h2>
             <p>
-                The device updates Digital Input Counter /3200/0/5501 every 5 seconds and is reported to Pelion Device Management.
-                However, your webapp may need data only every 1 minutes and not want to receive redundant data.
-                In this case, you can use  the notification rule pmin, which sets minimum report period.
-                Details for notification rules, see 
-                <a href="https://www.pelion.com/docs/device-management/current/connecting/resource-change-webapp.html#notification-rules">this page</a>.
+                デバイスは5秒ごとにデジタル入力カウンタ/3200/0/5501を更新し、Pelionデバイス管理サービスに報告します。
+                しかし、ウェブアプリは1分ごとにしかデータが必要なく、冗長なデータを受信したくない場合があります。
+                このような場合、最小レポート期間を設定する通知ルールpminを使用することができます。
+                通知ルールの詳細は、
+                <a href="https://www.pelion.com/docs/device-management/current/device-management/resource-change-webapp.html#notification-rules">こちら</a>を参照してください。
             </p>
             <p>
-                To set pmin 1 minute to your subscription to Digital Input Counter /3200/0/5501, set tMin with 
-                <a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html#createAsyncRequest">POST /v2/device-request</a>.
-                Specify the resource path in uri field with pmin=60 parameter. This is done in the script. 
+                デジタル入力カウンタ/3200/0/5501のサブスクリプションに1分のpminを設定するには、<a href="https://www.pelion.com/docs/device-management/current/service-api-references/connect-api.html#DeviceRequests">POST /v2/device-request</a> でtMinを指定します。
+                URIフィールドにリソースパスをpmin=60で指定します。これはスクリプトで行います。
             </p>
             <div class="operation">
                 <script src="https://gist-it.appspot.com/github/coisme/Pelion-device-e2e-example/blob/v0.1.0/e2e.js?slice=228:248&footer=minimal"></script>
-                <button type="button" onclick="setFilterParameter( getDeviceId(), '/3200/0/5501', 'pmin=60')">Run this code</button>
+                <button type="button" onclick="setFilterParameter( getDeviceId(), '/3200/0/5501', 'pmin=60')">このコードを実行</button>
             </div>
 
-            <h2>Unsubscribe</h2>
+            <h2>サブスクライブの停止</h2>
             <p>
-                To stop subscribing to the resource, use 
-                <a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html#deleteResourceSubscription">DELETE /v2/subscriptions/{device-id}/{resourcePath}</a>.
+                リソースのサブスクライブを停止するには、
+                <a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html#deleteResourceSubscription">DELETE /v2/subscriptions/{device-id}/{resourcePath}</a> を使用します。
             </p>
             <div class="operation">
                 <script src="https://gist-it.appspot.com/github/coisme/Pelion-device-e2e-example/blob/v0.1.0/e2e.js?slice=174:190&footer=minimal"></script>
-                <button type="button" onclick="unsubscribeResource( getDeviceId(), '/3200/0/5501')">Run this code</button>
+                <button type="button" onclick="unsubscribeResource( getDeviceId(), '/3200/0/5501')">このコードを実行</button>
             </div>
 
             
 
-            <h1>Delete WebSocket notification channel</h1>
+            <h1>WebSocket notificationチャネルの削除</h1>
             <p>
-                In the end, delete the WebSocket notification channel bound to the API key. Use
-                <a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html#deleteWebsocket">DELETE /v2/notification/websocket</a>.
-                This is required to change the channel from websocket to another type.
+                最後に、APIキーにバインドされているWebSocket notificationチャネルを削除します。
+                <a href="https://www.pelion.com/docs/device-management/current/service-api-references/device-management-connect.html#deleteWebsocket">DELETE /v2/notification/websocket</a> を使用します。
+                これは、チャンネルをwebsocketから別のタイプに変更するために必要です。
             </p>
             <div class="operation">
                 <script src="https://gist-it.appspot.com/github/coisme/Pelion-device-e2e-example/blob/v0.1.0/e2e.js?slice=248:265&footer=minimal"></script>
-                <button type="button" onclick="deleteWebSocketNotificationChannel()">Run this code</button>
+                <button type="button" onclick="deleteWebSocketNotificationChannel()">このコードを実行</button>
             </div>
             <p>
-                End-of-Contents
+                - 以上 -
             </p>
         </div>
 
